@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
+#Assignment 1
+#Amit Rogel
 import numpy as np
 import scipy.io
 from scipy.io import wavfile
+from scipy.signal import find_peaks
 import matplotlib.pyplot as plt
 
 testa = np.array([1, 2, 3], dtype=float)
@@ -14,8 +11,10 @@ testb = np.array([0, 1, 1], dtype=float)
 
 
 z=[]
+#Question1
+
 def crossCorr(x,y):
-    z = np.correlate(x,y, "same")
+    z = np.correlate(x,y)
     return z
 
 
@@ -27,25 +26,37 @@ def loadSoundFile(filename):
 
 snare = []
 drum_loop = []
+#creates correlation function for Q1
+def correlation(x,y):
+    #Loads files
+    snare =loadSoundFile(x)
+    drum_loop = loadSoundFile(y)
+    #Finds correlations
+    correlation_result = crossCorr(drum_loop,snare)
+    #Formats plot
+    fig1 = plt.plot(correlation_result)
+    plt.xlabel('Position')
+    plt.ylabel('Correlation')
+    plt.title('Correlation Between Snare and Drum Loop')
+    #Saves plot and displays it
+    plt.savefig('results/01-correlation.png')
+    plt.show(fig1)
 
-snare = loadSoundFile('snare.wav')
-drum_loop = loadSoundFile('drum_loop.wav')
+#Runs function
+correlation('Snare.wav','drum_loop.wav')
 
-correlation = crossCorr(snare,drum_loop)
+#Question 2
+def findSnarePosition(snareFilename,drumloopFilename):
+    #imports files
+    snare =loadSoundFile(snareFilename)
+    drum_loop = loadSoundFile(drumloopFilename)
+    #finds correlation
+    correlation_result = crossCorr(drum_loop,snare)
+    #Snare is mostly liekly to occur at the highest correlation between the samples, therefore we search for the maximums
+    snareLocation = find_peaks(correlation_result,distance=1000) #increased distance to filter results
+    snareLocation = snareLocation[0]
+    #saves possible list as .txt
+    np.savetxt('results/02-snareLocation.txt',snareLocation,fmt = '%-3f',newline='\n')
 
-snare_t=np.arange(snare.size)
-drum_loop_t = np.arange(drum_loop.size)
-correlation_t = np.arange(correlation.size)
-f = plt.figure() 
-f.set_figwidth(50) 
-f.set_figheight(50) 
-fig1 = plt.plot(correlation)
-plt.savefig('correlation.png')
-plt.show(fig1)
-
-#plt.xticks(np.arange(min(correlation_t), max(correlation_t)+1, 5000.0))
-#figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
-print(correlation)
-
-    #look for maxima
-    #scipy find peaks
+#runs function
+findSnarePosition('Snare.wav','drum_loop.wav')
