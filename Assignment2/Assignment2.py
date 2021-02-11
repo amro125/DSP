@@ -55,7 +55,7 @@ x = loadSoundFile('piano.wav')
 h = loadSoundFile('impulse-response.wav')
  
 
-print('REady for function2!')
+print('Ready for function2!')
 def CompareConv(x,h):
     #Does the convolution in SCipy
     start = time.time() #starts timere to figure time takes to calculate
