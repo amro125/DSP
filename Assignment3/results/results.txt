@@ -1,0 +1,4 @@
+3.4) Frequency resolution is Fs/n_points. 44100/50 is 882
+3.5) since resolution is inversely proportional to the amount of datapoints, padding a signal would increase the datapoints and give you a smaller (better) resolution.
+
+4.3)
